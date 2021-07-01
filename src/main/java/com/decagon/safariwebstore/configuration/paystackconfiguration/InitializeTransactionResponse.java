@@ -15,6 +15,7 @@ import lombok.ToString;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class InitializeTransactionResponse {
+
     private boolean status;
     private String message;
     private Data data;
