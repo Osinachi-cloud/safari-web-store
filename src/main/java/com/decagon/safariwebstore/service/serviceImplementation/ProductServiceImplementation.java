@@ -195,10 +195,12 @@ public class ProductServiceImplementation implements ProductService {
         productRepository.deleteById(productId);
     }
 
-//    public Product findById(long id){
-//       return productRepository.findById(id).get();
-//    }
-
+    @Override
+    public Product getProductById(Long id) {
+        Product product = productRepository.findProductById(id);
+        if(product == null) throw new ResourceNotFoundException("Error: Product with id, " + id + " does not exist");
+        return product;
+    }
 }
 
 
