@@ -10,11 +10,11 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
-public class PayStackVerifyTransactionResponse extends VerifyTransactionResponse {
+public class PayStackVerifyTransaction extends VerifyTransactionResponse {
 
-    public PayStackVerifyTransactionResponse verifyTransaction(String reference) throws Exception {
+    public PayStackVerifyTransaction verifyTransaction(String reference) throws Exception {
 
-        PayStackVerifyTransactionResponse payStackResponse;
+        PayStackVerifyTransaction payStackResponse = null;
 
         try {
 
@@ -42,7 +42,7 @@ public class PayStackVerifyTransactionResponse extends VerifyTransactionResponse
             ObjectMapper mapper = new ObjectMapper();
 
             try {
-                payStackResponse = mapper.readValue(result.toString(), PayStackVerifyTransactionResponse.class);
+                payStackResponse = mapper.readValue(result.toString(), PayStackVerifyTransaction.class);
 
                 if (payStackResponse.getData().getStatus().equals("success"))
                     return payStackResponse;
