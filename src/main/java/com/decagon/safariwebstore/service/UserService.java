@@ -1,5 +1,6 @@
 package com.decagon.safariwebstore.service;
 
+import com.decagon.safariwebstore.dto.UserDetailsDTO;
 import com.decagon.safariwebstore.model.User;
 import com.decagon.safariwebstore.payload.request.auth.EditUser;
 import com.decagon.safariwebstore.payload.request.UpdatePasswordRequest;
@@ -28,4 +29,5 @@ public interface UserService {
     boolean checkIfValidOldPassword(User user, UpdatePasswordRequest updatePasswordRequest);
     boolean changeUserPassword(User user, UpdatePasswordRequest updatePasswordRequest);
     User findUserById(Long userId);
+    UserDetailsDTO getUserDetails();
 }

@@ -49,4 +49,10 @@ public class UserController {
         return userService.userResetPassword(resetPassword);
     }
 
+    @GetMapping("/user-details")
+    @Secured({"ADMIN", "USER"})
+    public ResponseEntity<?>  getUserDetails(){
+        return new ResponseEntity<>(userService.getUserDetails(), HttpStatus.OK);
+    }
+
 }
