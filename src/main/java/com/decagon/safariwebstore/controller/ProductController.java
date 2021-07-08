@@ -45,7 +45,7 @@ public class ProductController {
         return new ResponseEntity<>(productDTOPage, HttpStatus.OK);
     }
 
-    @GetMapping("/{category}")
+    @GetMapping("categories/{category}")
     public ResponseEntity<Page<ProductDTO>> getProductsByCategory(@PathVariable String category,
                                                                ProductPage productPage) {
         Page<Product> products = productService.getProductsByCategory(productPage, category);
@@ -53,6 +53,11 @@ public class ProductController {
         Page<ProductDTO> productDTOPage = new PageImpl<>(productDTOList);
 
         return new ResponseEntity<>(productDTOPage, HttpStatus.OK);
+    }
+
+    @GetMapping("/{productId}")
+    public ResponseEntity<?> getProductsById(@PathVariable Long productId){
+        return new ResponseEntity<>(productService.getProductById(productId), HttpStatus.OK);
     }
 
     @GetMapping("/{category}/{subCategory}")
