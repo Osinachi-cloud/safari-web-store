@@ -9,7 +9,12 @@ import com.decagon.safariwebstore.repository.CartItemRepository;
 import com.decagon.safariwebstore.service.CartItemService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -49,9 +54,45 @@ public class CartItemServiceImplementation implements CartItemService {
         return response;
     }
 
-
     @Override
     public CartItem saveCartItem(CartItem item) {
         return cartItemRepository.save(item);
     }
+
+    @Override
+    public List<CartItemDTO> getCartItems(User user) {
+        List<CartItemDTO> cartItemDTOList = new ArrayList<>();
+
+        cartItemRepository.findAllByUser(user).stream().forEach(cartItem -> {
+            CartItemDTO cartItemDTO = new CartItemDTO();
+
+            cartItemDTO.setId(cartItem.getId());
+            cartItemDTO.setPrice(cartItem.getPrice());
+            cartItemDTO.setColor(cartItem.getColor());
+            cartItemDTO.setQuantity(cartItem.getQuantity());
+            cartItemDTO.setDescription(cartItem.getDescription());
+            cartItemDTO.setName(cartItem.getName());
+            cartItemDTO.setProductId(cartItem.getProductId());
+            cartItemDTO.setProductImage(cartItem.getProductImage());
+            cartItemDTO.setSize(cartItem.getSize());
+
+            cartItemDTOList.add(cartItemDTO);
+        });
+
+        return cartItemDTOList;
+    }
+
+    @Override
+    public ResponseEntity<Response> deleteCartItemById(Long id) {
+        Response res = new Response();
+        try {
+            cartItemRepository.deleteById(id);
+        } catch (Exception exception) {
+            throw new ResourceNotFoundException("Cart not found!");
+        }
+        res.setStatus(200);
+        res.setMessage("Cart item deleted successfully");
+        return new ResponseEntity<>(res, HttpStatus.OK);
+    }
+
 }
