@@ -42,7 +42,6 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @Slf4j
 @RequestMapping("/api")
-@CrossOrigin
 public class
 AuthController {
 
