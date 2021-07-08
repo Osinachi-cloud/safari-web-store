@@ -1,5 +1,6 @@
 package com.decagon.safariwebstore.service.serviceImplementation;
 
+import com.decagon.safariwebstore.dto.UserDetailsDTO;
 import com.decagon.safariwebstore.exceptions.BadRequestException;
 import com.decagon.safariwebstore.exceptions.ResourceNotFoundException;
 import com.decagon.safariwebstore.model.ERole;
@@ -310,5 +311,14 @@ public class UserServiceImplementation implements UserService {
         Optional<User> user = userRepository.findById(userId);
         if(user.isEmpty()) throw new ResourceNotFoundException("Incorrect parameter; email " + userId + " does not exist");
         return user.get();
+    }
+
+    @Override
+    public UserDetailsDTO getUserDetails() {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = findUserByEmail(email);
+        UserDetailsDTO userDetails = new UserDetailsDTO(user.getFirstName(), user.getLastName(),
+                user.getEmail(), user.getGender(), user.getDateOfBirth());
+        return userDetails;
     }
 }
