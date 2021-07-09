@@ -5,6 +5,7 @@ import com.decagon.safariwebstore.model.Order;
 import com.decagon.safariwebstore.model.User;
 import com.decagon.safariwebstore.payload.request.UpdateOrderRequest;
 import com.decagon.safariwebstore.payload.response.PagedOrderByStatusResponse;
+import java.util.List;
 
 public interface OrderService {
     OrderResponseDTO getOrder(Long orderId);
@@ -15,4 +16,5 @@ public interface OrderService {
     PagedOrderByStatusResponse<OrderResponseDTO> userGetOrderByUser(Integer page, Integer size);
     void updateOrderStatus(Long orderId, UpdateOrderRequest orderRequest);
     void userConfirmOrderStatus(Long orderId);
+    List<OrderResponseDTO> getAllOrdersAdmin();
 }
