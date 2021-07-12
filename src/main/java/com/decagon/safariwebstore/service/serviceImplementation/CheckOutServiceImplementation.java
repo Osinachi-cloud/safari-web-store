@@ -43,24 +43,23 @@ public class CheckOutServiceImplementation implements CheckOutService {
     public OrderResponseDTO doCheckout(OrderRequestDTO orderRequestDTO, String email) {
         User currentUser = getCurrentUserByEmail(email);
 
+        ShippingAddress shippingAddress = setDefaultShippingAddress(orderRequestDTO.getShippingAddress(), currentUser);
         orderRequestDTO.setStatus(orderRequestDTO.getStatus().toUpperCase());
-
         List<OrderedItem> orderedItemList = getOrderedItems(orderRequestDTO.getCartItemIds(), currentUser);
-
         Order currentOrder = modelMapper.map(orderRequestDTO, Order.class);
         currentOrder.setUser(currentUser);
         orderedItemRepository.saveAll(orderedItemList);
         currentOrder.setOrderedItems(orderedItemList);
+        currentOrder.setShippingAddress(shippingAddress);
         orderService.saveOrder(currentOrder);
 
         clearCartItems(orderRequestDTO.getCartItemIds());
 
-        setDefaultShippingAddress(currentOrder.getShippingAddress(), currentUser);
 
         OrderResponseDTO orderResponseDTO = modelMapper.map(currentOrder, OrderResponseDTO.class);
         UserDTO userDTO = modelMapper.map(currentUser, UserDTO.class);
         orderResponseDTO.setOrderedBy(userDTO);
-
+        System.out.println("Checking OrderId "+ orderResponseDTO.getOrderId());
         return orderResponseDTO;
     }
 
@@ -68,7 +67,7 @@ public class CheckOutServiceImplementation implements CheckOutService {
         cartItemRepository.deleteAllById(cartItemIds);
     }
 
-    private void setDefaultShippingAddress(ShippingAddress currentShippingAddress, User currentUser) {
+    private ShippingAddress setDefaultShippingAddress(ShippingAddress currentShippingAddress, User currentUser) {
         Boolean userDefaultAddressExists = addressService.userDefaultAddressExists(currentUser);
         Boolean addressExists = addressRepository
                 .existsAddressByUserAndAddressAndCityAndState(currentUser,
@@ -84,10 +83,15 @@ public class CheckOutServiceImplementation implements CheckOutService {
             savedShippingAddress.setIsDefaultShippingAddress(true);
             addressRepository.save(savedShippingAddress);
 
-            if (userDefaultAddressExists) {
+            if (userDefaultAddressExists && !currentShippingAddress.getIsDefaultShippingAddress()) {
                 Address userDefaultAddress = addressService.getUserDefaultAddress(currentUser);
                 userDefaultAddress.setIsDefaultShippingAddress(false);
                 addressRepository.save(userDefaultAddress);
+            }else{
+                Address userDefaultAddress = addressService.getUserDefaultAddress(currentUser);
+                userDefaultAddress.setIsDefaultShippingAddress(true);
+                addressRepository.save(userDefaultAddress);
+
             }
         } else if ((!currentShippingAddress.getIsDefaultShippingAddress() && !addressExists)) {
             Address newAddress = modelMapper.map(currentShippingAddress, Address.class);
@@ -102,6 +106,8 @@ public class CheckOutServiceImplementation implements CheckOutService {
         }
 
         shippingAddressRepository.save(currentShippingAddress);
+
+        return currentShippingAddress;
     }
 
     private User getCurrentUserByEmail(String email) {

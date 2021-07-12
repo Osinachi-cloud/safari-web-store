@@ -1,6 +1,7 @@
 package com.decagon.safariwebstore.dto;
 
 import com.decagon.safariwebstore.model.ShippingAddress;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,9 +20,11 @@ public class OrderRequestDTO {
 
     private Double price;
 
+    @JsonFormat(pattern="yyyy-MM-dd'T'HH:mm:ss")
     private Date dateOrdered;
 
     private Double cardDiscount;
+
 
     private Date dateDelivered;
 

@@ -16,13 +16,12 @@ public class PaymentController {
     private PaymentService paymentService;
 
     @GetMapping(value = "/pay/{id}")
-    public void makePayment(HttpServletResponse httpServletResponse, @PathVariable String id) throws Exception {
+    public String makePayment(HttpServletResponse httpServletResponse, @PathVariable String id) throws Exception {
 
         Long orderId = Long.valueOf(id);
-
         String paymentUrl = paymentService.getPaymentAuthorizationUrl(orderId);
-        httpServletResponse.setHeader("Location", paymentUrl);
-        httpServletResponse.setStatus(302);
+
+        return paymentUrl;
     }
 
 
