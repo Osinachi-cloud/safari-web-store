@@ -61,7 +61,6 @@ public class AddressServiceImplementation implements AddressService {
     public Address editAddress(Long addressId, Address addressRequest) {
         Optional<Address> address = addressRepository.findById(addressId);
         if(address.isPresent()) {
-//            address.get().setUser(addressRequest.getUser());
             address.get().setAddress(addressRequest.getAddress());
             address.get().setCity(addressRequest.getCity());
             address.get().setState(addressRequest.getState());

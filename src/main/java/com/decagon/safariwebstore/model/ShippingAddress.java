@@ -35,5 +35,8 @@ public class ShippingAddress extends BaseModel {
 
     private Boolean isDefaultShippingAddress;
 
-
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 }
