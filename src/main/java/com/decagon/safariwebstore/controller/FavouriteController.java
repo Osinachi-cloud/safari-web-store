@@ -26,13 +26,14 @@ public class FavouriteController {
     }
 
     @GetMapping("/favourite/products")
-
+    @Secured({"ADMIN","USER"})
     public ResponseEntity<?> getAllFavouriteProducts(){
         UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return new ResponseEntity<>(favouriteService.getFavouriteProducts(userDetails), HttpStatus.OK);
     }
 
     @GetMapping("/favourite/product/{productId}")
+    @Secured({"ADMIN","USER"})
     public ResponseEntity<?> getSingleFavouriteProducts(@PathVariable Long productId){
         return new ResponseEntity<>(favouriteService.getFavouriteProductsById(productId), HttpStatus.OK);
     }

@@ -21,7 +21,7 @@ import java.util.List;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/orders")
+@RequestMapping("/api/orders")
 public class OrderController {
 
     private final OrderService orderService;
@@ -29,11 +29,13 @@ public class OrderController {
     private final JWTUtil jwtUtil;
 
     @GetMapping("/{orderId}")
+    @Secured({"ADMIN","USER"})
     public ResponseEntity<OrderResponseDTO> viewParticularOrder(@PathVariable Long orderId) {
         return new ResponseEntity<>(orderService.getOrder(orderId), HttpStatus.OK);
     }
 
     @GetMapping("/admin")
+    @Secured("ADMIN")
     public ResponseEntity<List<OrderResponseDTO>> getAllOrdersAdmin() {
         return new ResponseEntity<>(orderService.getAllOrdersAdmin(), HttpStatus.OK);
     }
