@@ -2,6 +2,7 @@ package com.decagon.safariwebstore.dto;
 
 import com.decagon.safariwebstore.model.OrderedItem;
 import com.decagon.safariwebstore.model.ShippingAddress;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import java.util.Date;
@@ -9,6 +10,9 @@ import java.util.List;
 
 @Data
 public class OrderResponseDTO {
+
+    private  Long orderId;
+
     private String quantity;
 
     private String deliveryMethod;

@@ -29,14 +29,17 @@ public class PaymentServiceImplementation implements PaymentService {
 
     public String getPaymentAuthorizationUrl(Long orderId) throws Exception {
 
+
+
         OrderResponseDTO order = orderService.getOrder(orderId);
+
         InitializeTransactionRequest request = new InitializeTransactionRequest();
         request.setEmail(SecurityContextHolder.getContext().getAuthentication().getName());
 
         //converting to Kobo
-        request.setAmount(order.getTotalCost().intValue() * 100);
+        request.setAmount((int) (order.getTotalCost() * 100));
 
-        request.setCallback_url("http://localhost:8080/api/payment/confirm/" + orderId);
+        request.setCallback_url("http://localhost:9690/api/payment/confirm/" + orderId);
 
         InitializeTransactionResponse response = InitializeTransaction.initTransaction(request);
         String authorizationUrl = response.getData().getAuthorization_url();

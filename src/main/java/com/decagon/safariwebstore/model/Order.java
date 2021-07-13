@@ -41,7 +41,7 @@ public class Order extends BaseModel {
     @Column(columnDefinition = "DECIMAL")
     private Double totalCost;
 
-    @OneToOne(cascade=CascadeType.ALL)
+    @OneToOne(cascade=CascadeType.MERGE)
     @JoinColumn(name = "shippingaddress_id")
     private ShippingAddress shippingAddress;
 

@@ -31,6 +31,7 @@ public class CheckOutController {
     @Secured({"ADMIN","USER"})
     public ResponseEntity<OrderResponseDTO> doCheckOut(HttpServletRequest request,
                                         @RequestBody OrderRequestDTO orderRequest){
+
         String jwt = MethodUtils.parseJwt(request);
         String email = jwtUtil.extractUserName(jwt);
         OrderResponseDTO orderResponseDTO = checkoutService.doCheckout(orderRequest, email);
