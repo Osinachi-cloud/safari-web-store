@@ -59,7 +59,6 @@ public class CheckOutServiceImplementation implements CheckOutService {
         OrderResponseDTO orderResponseDTO = modelMapper.map(currentOrder, OrderResponseDTO.class);
         UserDTO userDTO = modelMapper.map(currentUser, UserDTO.class);
         orderResponseDTO.setOrderedBy(userDTO);
-        System.out.println("Checking OrderId "+ orderResponseDTO.getOrderId());
         return orderResponseDTO;
     }
 
