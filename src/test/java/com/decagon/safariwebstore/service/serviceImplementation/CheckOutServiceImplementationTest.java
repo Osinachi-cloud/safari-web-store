@@ -49,8 +49,9 @@ class CheckOutServiceImplementationTest {
 
     @BeforeEach
     void setUp() {
+        User user = new User("austin", "sam", "austin@gmail.com", "male", "27-11-1999", "password");
         shippingAddress = new ShippingAddress("Emmanuel", "emman@mail.com",
-                "Decagon", "Lagos state", "Lagos", "08056522762", true);
+                "Decagon", "Lagos state", "Lagos", "08056522762", true,user);
 
 
     }
