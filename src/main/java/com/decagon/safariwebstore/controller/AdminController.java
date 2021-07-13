@@ -67,8 +67,6 @@ public class  AdminController {
         return adminService.getSingleProduct(productId);
     }
 
-
-
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/update-product/{id}")
     @Secured("ADMIN")
@@ -78,8 +76,6 @@ public class  AdminController {
         return new ResponseEntity<>(new Response(200,
                 "Product updated successfully"), HttpStatus.OK);
     }
-
-
 
     @PreAuthorize("hasRole('ADMIN')")
     @Secured("ADMIN")

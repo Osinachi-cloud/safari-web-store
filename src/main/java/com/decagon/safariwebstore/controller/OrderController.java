@@ -1,6 +1,7 @@
 package com.decagon.safariwebstore.controller;
 
 import com.decagon.safariwebstore.dto.OrderResponseDTO;
+import com.decagon.safariwebstore.model.Order;
 import com.decagon.safariwebstore.model.User;
 import com.decagon.safariwebstore.payload.request.UpdateOrderRequest;
 import com.decagon.safariwebstore.payload.response.PagedOrderByStatusResponse;
@@ -15,12 +16,12 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-
+import java.util.List;
 
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/orders")
+@RequestMapping("/api/orders")
 public class OrderController {
 
     private final OrderService orderService;
@@ -28,8 +29,15 @@ public class OrderController {
     private final JWTUtil jwtUtil;
 
     @GetMapping("/{orderId}")
+    @Secured({"ADMIN","USER"})
     public ResponseEntity<OrderResponseDTO> viewParticularOrder(@PathVariable Long orderId) {
         return new ResponseEntity<>(orderService.getOrder(orderId), HttpStatus.OK);
+    }
+
+    @GetMapping("/admin")
+    @Secured("ADMIN")
+    public ResponseEntity<List<OrderResponseDTO>> getAllOrdersAdmin() {
+        return new ResponseEntity<>(orderService.getAllOrdersAdmin(), HttpStatus.OK);
     }
 
     @GetMapping("/user/status")

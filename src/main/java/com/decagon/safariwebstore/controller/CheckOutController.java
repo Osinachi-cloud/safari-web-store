@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/check-out")
+@RequestMapping("/api/check-out")
 public class CheckOutController {
 
 

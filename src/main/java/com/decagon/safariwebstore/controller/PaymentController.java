@@ -4,6 +4,7 @@ import com.decagon.safariwebstore.payload.response.Response;
 import com.decagon.safariwebstore.service.PaymentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
@@ -17,7 +18,6 @@ public class PaymentController {
 
     @GetMapping(value = "/pay/{id}")
     public String makePayment(HttpServletResponse httpServletResponse, @PathVariable String id) throws Exception {
-
         Long orderId = Long.valueOf(id);
         String paymentUrl = paymentService.getPaymentAuthorizationUrl(orderId);
 
@@ -26,6 +26,7 @@ public class PaymentController {
 
 
     @GetMapping(value = "/confirm/{order}")
+    @Secured({"ADMIN","USER"})
     public ResponseEntity<Response> confirmPayment(@PathVariable String order) throws Exception {
         Long orderId = Long.valueOf(order);
         return paymentService.confirmPayment(orderId);

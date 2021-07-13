@@ -100,6 +100,13 @@ public class OrderServiceImplementation implements OrderService {
         orderRepository.save(order);
     }
 
+    @Override
+    public List<OrderResponseDTO> getAllOrdersAdmin() {
+        List<OrderResponseDTO> paginatedOrderResponseDTOs = orderRepository.findAll().stream().map(order -> modelMapper.map(order, OrderResponseDTO.class))
+                .collect(Collectors.toList());
+        return paginatedOrderResponseDTOs;
+    }
+
     public PagedOrderByStatusResponse<OrderResponseDTO> ordersPageResponse(List<Order> orders,
                                                                            Page<Order> orderPage) {
         List<OrderResponseDTO> orderResponseList = orders.stream().map(order -> {
