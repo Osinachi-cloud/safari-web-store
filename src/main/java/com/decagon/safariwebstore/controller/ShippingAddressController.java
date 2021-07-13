@@ -65,8 +65,11 @@ public class ShippingAddressController {
     }
 
     @DeleteMapping("/delete/{addressId}")
-    public ResponseEntity<?> deleteShippingAddress(@PathVariable Long addressId) {
-        return shippingAddressService.deleteShippingAddress(addressId);
+    public ResponseEntity<?> deleteShippingAddress(@PathVariable Long addressId, HttpServletRequest request) {
+        String jwt = MethodUtils.parseJwt(request);
+        String email = jwtUtil.extractUserName(jwt);
+        User user = userService.findUserByEmail(email);
+        return shippingAddressService.deleteShippingAddress(addressId, user);
     }
 
 

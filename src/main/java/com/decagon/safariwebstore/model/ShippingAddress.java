@@ -9,6 +9,9 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @EqualsAndHashCode(callSuper = false)
 @Data
@@ -23,8 +26,10 @@ public class ShippingAddress extends BaseModel {
 
     private String fullName;
 
+    @Email
     private String email;
 
+    @Column(unique = true)
     private String address;
 
     private String state;

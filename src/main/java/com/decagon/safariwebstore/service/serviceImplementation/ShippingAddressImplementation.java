@@ -5,7 +5,6 @@ import com.decagon.safariwebstore.model.ShippingAddress;
 import com.decagon.safariwebstore.model.User;
 import com.decagon.safariwebstore.repository.ShippingAddressRepository;
 import com.decagon.safariwebstore.service.ShippingAddressService;
-import com.decagon.safariwebstore.utils.MethodUtils;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,7 +36,7 @@ public class ShippingAddressImplementation implements ShippingAddressService {
     public ShippingAddress getUserDefaultShippingAddress(User user) {
         return getAllUserShippingAddresses(user)
                 .stream()
-                .filter(shippingAddress -> shippingAddress.getIsDefaultShippingAddress())
+                .filter(ShippingAddress::getIsDefaultShippingAddress)
                 .findFirst()
                 .orElseThrow(() -> new ResourceNotFoundException("Default address not found!"));
     }
@@ -50,9 +49,9 @@ public class ShippingAddressImplementation implements ShippingAddressService {
         if (listOfShippingAddresses.isEmpty()) {
             shippingAddressRequest.setIsDefaultShippingAddress(true);
         } else if (shippingAddressRequest.getIsDefaultShippingAddress()){
-            ShippingAddress currentDefaultShippingAddress = getUserDefaultShippingAddress(user);
-            currentDefaultShippingAddress.setIsDefaultShippingAddress(false);
-            shippingAddressRepository.save(currentDefaultShippingAddress);
+            Optional<ShippingAddress> currentDefaultShippingAddress = getAllUserShippingAddresses(user).stream().filter(ShippingAddress::getIsDefaultShippingAddress).findFirst();
+            currentDefaultShippingAddress.ifPresent(shippingAddress -> shippingAddress.setIsDefaultShippingAddress(false));
+            currentDefaultShippingAddress.ifPresent(shippingAddressRepository::save);
         }
 
         shippingAddressRequest.setUser(user);
@@ -63,16 +62,26 @@ public class ShippingAddressImplementation implements ShippingAddressService {
     public ShippingAddress editShippingAddress(Long addressId, ShippingAddress shippingAddressRequest, User user) {
         Optional<ShippingAddress> shippingAddress = shippingAddressRepository.findById(addressId);
         if(shippingAddress.isPresent()) {
-            if (shippingAddressRequest.getIsDefaultShippingAddress()){
-                ShippingAddress currentDefaultShippingAddress = getUserDefaultShippingAddress(user);
-                currentDefaultShippingAddress.setIsDefaultShippingAddress(false);
-                shippingAddressRepository.save(currentDefaultShippingAddress);
-            }
             shippingAddress.get().setAddress(shippingAddressRequest.getAddress());
             shippingAddress.get().setCity(shippingAddressRequest.getCity());
             shippingAddress.get().setState(shippingAddressRequest.getState());
             shippingAddress.get().setPhone(shippingAddressRequest.getPhone());
             shippingAddress.get().setIsDefaultShippingAddress(shippingAddressRequest.getIsDefaultShippingAddress());
+            if (shippingAddress.get().getIsDefaultShippingAddress()){
+                Optional<ShippingAddress> currentDefaultShippingAddress = getAllUserShippingAddresses(user).stream().filter(ShippingAddress::getIsDefaultShippingAddress).findFirst();
+                if (!shippingAddress.get().getId().equals(currentDefaultShippingAddress.get().getId())) {
+                    currentDefaultShippingAddress.ifPresent(address -> address.setIsDefaultShippingAddress(false));
+                    currentDefaultShippingAddress.ifPresent(shippingAddressRepository::save);
+                }
+            } else if (!shippingAddress.get().getIsDefaultShippingAddress()){
+                Optional<ShippingAddress> currentDefaultShippingAddress = getAllUserShippingAddresses(user).stream().filter(ShippingAddress::getIsDefaultShippingAddress).findFirst();
+                if (currentDefaultShippingAddress.isEmpty()) {
+                    List<ShippingAddress> listOfShippingAddresses = getAllUserShippingAddresses(user);
+                    Optional<ShippingAddress> shippingAddress1 = listOfShippingAddresses.stream().findFirst();
+                    shippingAddress1.ifPresent(address -> address.setIsDefaultShippingAddress(true));
+                    shippingAddress1.ifPresent(shippingAddressRepository::save);
+                }
+            }
             return shippingAddressRepository.save(shippingAddress.get());
         } else {
             throw new ResourceNotFoundException("Shipping Address not found!");
@@ -80,30 +89,18 @@ public class ShippingAddressImplementation implements ShippingAddressService {
     }
 
     @Override
-    public ResponseEntity<?> deleteShippingAddress(Long addressId) {
+    public ResponseEntity<?> deleteShippingAddress(Long addressId, User user) {
         Optional<ShippingAddress> shippingAddress = shippingAddressRepository.findById(addressId);
         if (shippingAddress.isPresent()) {
             shippingAddressRepository.delete(shippingAddress.get());
+            List<ShippingAddress> listOfShippingAddresses = getAllUserShippingAddresses(user);
+            Optional<ShippingAddress> shippingAddress1 = listOfShippingAddresses.stream().findFirst();
+            shippingAddress1.ifPresent(address -> address.setIsDefaultShippingAddress(true));
+            shippingAddress1.ifPresent(shippingAddressRepository::save);
             return new ResponseEntity<>("ShippingAddress has been deleted.", HttpStatus.OK);
         } else {
             throw new ResourceNotFoundException("ShippingAddress not found!!");
         }
     }
 
-//    @Override
-//    public ShippingAddress getAddressByUserAndAddressAndCityAndState(User user, String address, String city, String state) {
-//        return shippingAddressRepository.findAddressByUserAndAddressAndCityAndState(user, address,
-//                city, state).orElseThrow(
-//                () -> {
-//                    throw new ResourceNotFoundException("Address not found");
-//                }
-//        );
-//    }
-//
-//    @Override
-//    public Boolean isAddressExisting(ShippingAddress shippingAddress, User user) {
-//        return shippingAddressRepository
-//                .existsAddressByUserAndAddressAndCityAndState(user, shippingAddress.getAddress(),
-//                        shippingAddress.getCity(), shippingAddress.getState());
-//    }
 }

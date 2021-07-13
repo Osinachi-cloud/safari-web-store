@@ -15,6 +15,6 @@ public interface ShippingAddressService {
 
     ShippingAddress editShippingAddress(Long addressId, ShippingAddress shippingAddressRequest, User user);
 
-    ResponseEntity<?> deleteShippingAddress(Long addressId);
+    ResponseEntity<?> deleteShippingAddress(Long addressId, User user);
 
 }
