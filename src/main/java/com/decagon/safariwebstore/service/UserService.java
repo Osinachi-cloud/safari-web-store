@@ -29,5 +29,5 @@ public interface UserService {
     boolean checkIfValidOldPassword(User user, UpdatePasswordRequest updatePasswordRequest);
     boolean changeUserPassword(User user, UpdatePasswordRequest updatePasswordRequest);
     User findUserById(Long userId);
-    UserDetailsDTO getUserDetails();
+    UserDTO getUserDetails();
 }

@@ -39,7 +39,7 @@ public class PaymentServiceImplementation implements PaymentService {
         //converting to Kobo
         request.setAmount((int) (order.getTotalCost() * 100));
 
-        request.setCallback_url("http://localhost:9690/api/payment/confirm/" + orderId);
+        request.setCallback_url("http://localhost:8045/api/payment/confirm/" + orderId);
 
         InitializeTransactionResponse response = InitializeTransaction.initTransaction(request);
         String authorizationUrl = response.getData().getAuthorization_url();

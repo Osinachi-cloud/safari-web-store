@@ -314,11 +314,9 @@ public class UserServiceImplementation implements UserService {
     }
 
     @Override
-    public UserDetailsDTO getUserDetails() {
+    public UserDTO getUserDetails() {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = findUserByEmail(email);
-        UserDetailsDTO userDetails = new UserDetailsDTO(user.getFirstName(), user.getLastName(),
-                user.getEmail(), user.getGender(), user.getDateOfBirth());
-        return userDetails;
+        return  UserDTO.build(user);
     }
 }
