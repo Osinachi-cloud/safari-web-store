@@ -41,6 +41,7 @@ public class PaymentServiceImplementation implements PaymentService {
 
 //        request.setCallback_url("http://localhost:8045/api/payment/confirm/" + orderId);
         request.setCallback_url("https://safari-web-store.web.app/api/payment/confirm/" + orderId);
+        request.setCallback_url("https://safariwebstoreapp.herokuapp.com/api/payment/confirm/" + orderId);
 
         InitializeTransactionResponse response = InitializeTransaction.initTransaction(request);
         String authorizationUrl = response.getData().getAuthorization_url();
