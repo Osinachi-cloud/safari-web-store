@@ -27,8 +27,14 @@ public class PaymentController {
 
     @GetMapping(value = "/confirm/{order}")
     @Secured({"ADMIN","USER"})
-    public ResponseEntity<Response> confirmPayment(@PathVariable String order) throws Exception {
+    public void confirmPayment(@PathVariable String order, HttpServletResponse response) throws Exception {
         Long orderId = Long.valueOf(order);
-        return paymentService.confirmPayment(orderId);
+
+        paymentService.confirmPayment(orderId);
+
+        //response.sendRedirect("http://localhost:3000/success-payment/");
+        response.sendRedirect("https://safari-web-store.web.app/success-payment/");
+
     }
+
 }
