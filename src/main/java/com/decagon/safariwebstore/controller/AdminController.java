@@ -76,8 +76,7 @@ public class  AdminController {
         return new ResponseEntity<>(new Response(200,
                 "Product updated successfully"), HttpStatus.OK);
     }
-
-    @PreAuthorize("hasRole('ADMIN')")
+    
     @Secured("ADMIN")
     @DeleteMapping("/delete-product/{id}")
     public ResponseEntity<?> deleteProduct(@PathVariable(name = "id") Long productId) {
